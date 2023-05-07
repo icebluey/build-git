@@ -791,8 +791,8 @@ _build_pcre2() {
     --enable-jit \
     --enable-pcre2grep-libz --enable-pcre2grep-libbz2 \
     --enable-pcre2test-libedit --enable-unicode \
-    --prefix=/usr --libdir=/usr/lib64 \
-    --includedir=/usr/include --sysconfdir=/etc
+    --prefix=/usr --libdir=/usr/lib64 --includedir=/usr/include --sysconfdir=/etc
+    sed 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' -i libtool
     make all
     rm -fr /tmp/pcre2
     make install DESTDIR=/tmp/pcre2
@@ -835,7 +835,6 @@ _build_pcre2() {
         find usr/bin/ -type f -exec file '{}' \; | sed -n -e 's/^\(.*\):[  ]*ELF.*, not stripped.*/\1/p' | xargs --no-run-if-empty -I '{}' /usr/bin/strip '{}'
     fi
     echo
-    find usr/lib64/ -type f -iname 'libpcre2-posix.so*' | xargs -I '{}' chrpath -r '$ORIGIN' '{}'
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
     sleep 1
