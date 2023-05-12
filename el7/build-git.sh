@@ -1715,6 +1715,9 @@ _build_git() {
     if [[ -d usr/libexec/git-core ]]; then
         find usr/libexec/git-core/ -type f -exec file '{}' \; | sed -n -e 's/^\(.*\):[  ]*ELF.*, not stripped.*/\1/p' | xargs --no-run-if-empty -I '{}' /usr/bin/strip '{}'
     fi
+    rm -f /usr/lib64/curl/private/libgmpxx.*
+    rm -f /usr/lib64/curl/private/libgnutlsxx.*
+    sleep 2
     install -m 0755 -d usr/lib64/git
     cp -afr /usr/lib64/git/private usr/lib64/git/
     echo
