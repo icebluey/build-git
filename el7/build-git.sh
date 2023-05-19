@@ -81,10 +81,10 @@ _build_zlib() {
         find usr/bin/ -type f -exec file '{}' \; | sed -n -e 's/^\(.*\):[  ]*ELF.*, not stripped.*/\1/p' | xargs --no-run-if-empty -I '{}' /usr/bin/strip '{}'
     fi
     echo
-    install -m 0755 -d usr/lib64/git/private
-    cp -af usr/lib64/*.so* usr/lib64/git/private/
     /bin/rm -f /usr/lib64/libz.so*
     /bin/rm -f /usr/lib64/libz.a
+    install -m 0755 -d usr/lib64/git/private
+    cp -af usr/lib64/*.so* usr/lib64/git/private/
     sleep 2
     /bin/cp -afr * /
     sleep 2
@@ -861,7 +861,8 @@ _build_nghttp2() {
     set -e
     _tmp_dir="$(mktemp -d)"
     cd "${_tmp_dir}"
-    wget -c -t 9 -T 9 "https://github.com/nghttp2/nghttp2/releases/download/v1.52.0/nghttp2-1.52.0.tar.xz"
+    _nghttp2_ver="$(wget -qO- 'https://github.com/nghttp2/nghttp2/releases' | sed 's|"|\n|g' | grep -i '^/nghttp2/nghttp2/tree' | sed 's|.*/nghttp2-||g' | sed 's|\.tar.*||g' | grep -ivE 'alpha|beta|rc' | sed -e 's|.*tree/||g' -e 's|[Vv]||g' | sort -V | uniq | tail -n 1)"
+    wget -c -t 9 -T 9 "https://github.com/nghttp2/nghttp2/releases/download/v${_nghttp2_ver}/nghttp2-${_nghttp2_ver}.tar.xz"
     tar -xof nghttp2-*.tar*
     sleep 1
     rm -f nghttp2-*.tar*
@@ -929,8 +930,9 @@ _build_libidn2() {
     set -e
     _tmp_dir="$(mktemp -d)"
     cd "${_tmp_dir}"
-    wget -c -t 9 -T 9 "https://ftp.gnu.org/gnu/libidn/libidn2-2.3.4.tar.gz"
-    tar -xof libidn2-*.tar*
+    _libidn2_ver="$(wget -qO- 'https://ftp.gnu.org/gnu/libidn/' | sed 's|"|\n|g' | grep -i '^libidn2-[1-9]' | sed -e 's|libidn2-||g' -e 's|\.tar.*||g' | grep -ivE 'alpha|beta|rc' | sed -e 's|.*tree/||g' -e 's|[Vv]||g' | sort -V | uniq | tail -n 1)"
+    wget -c -t 9 -T 9 "https://ftp.gnu.org/gnu/libidn/libidn2-${_libidn2_ver}.tar.gz"
+    tar -xof libidn2-*.tar.*
     sleep 1
     rm -f libidn2-*.tar*
     cd libidn2-*
