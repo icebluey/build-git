@@ -34,7 +34,7 @@ _build_zlib() {
     cd "${_tmp_dir}"
     _zlib_ver="$(wget -qO- 'https://www.zlib.net/' | grep 'zlib-[1-9].*\.tar\.' | sed -e 's|"|\n|g' | grep '^zlib-[1-9]' | sed -e 's|\.tar.*||g' -e 's|zlib-||g' | sort -V | uniq | tail -n 1)"
     wget -c -t 9 -T 9 "https://www.zlib.net/zlib-${_zlib_ver}.tar.gz"
-    tar -xof zlib-${_zlib_ver}.tar.*
+    tar -xof zlib-*.tar.*
     sleep 1
     rm -f zlib-*.tar*
     cd zlib-*
@@ -51,6 +51,7 @@ _build_zlib() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -82,10 +83,9 @@ _build_zlib() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
     /bin/rm -f /usr/lib64/libz.so*
     /bin/rm -f /usr/lib64/libz.a
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -142,6 +142,7 @@ _build_gmp() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -173,7 +174,7 @@ _build_gmp() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -209,6 +210,7 @@ _build_cares() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -240,7 +242,7 @@ _build_cares() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -281,6 +283,7 @@ _build_brotli() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -312,7 +315,7 @@ _build_brotli() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -359,6 +362,7 @@ _build_lz4() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -391,7 +395,7 @@ _build_lz4() {
     find usr/lib64/ -type f -iname '*.so*' | xargs -I '{}' chrpath -r '$ORIGIN' '{}'
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -438,6 +442,7 @@ _build_zstd() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -470,7 +475,7 @@ _build_zstd() {
     find usr/lib64/ -type f -iname '*.so*' | xargs -I '{}' chrpath -r '$ORIGIN' '{}'
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -508,6 +513,7 @@ _build_libunistring() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -539,7 +545,7 @@ _build_libunistring() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -575,6 +581,7 @@ _build_libexpat() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -606,7 +613,7 @@ _build_libexpat() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -659,6 +666,7 @@ _build_openssl111() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -695,9 +703,9 @@ _build_openssl111() {
     rm -fr /usr/include/openssl
     rm -fr /usr/local/openssl-1.1.1
     rm -f /etc/ld.so.conf.d/openssl-1.1.1.conf
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
-    sleep 1
+    sleep 2
     cd /tmp
     rm -fr "${_tmp_dir}"
     rm -fr /tmp/openssl111
@@ -732,6 +740,7 @@ _build_libssh2() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -763,7 +772,7 @@ _build_libssh2() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -806,6 +815,7 @@ _build_pcre2() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -837,7 +847,7 @@ _build_pcre2() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -873,6 +883,7 @@ _build_nghttp2() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -904,7 +915,7 @@ _build_nghttp2() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -940,6 +951,7 @@ _build_libidn2() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -971,7 +983,7 @@ _build_libidn2() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -1007,6 +1019,7 @@ _build_libffi() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -1038,7 +1051,7 @@ _build_libffi() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -1086,6 +1099,7 @@ _build_p11kit() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -1117,7 +1131,7 @@ _build_p11kit() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -1157,6 +1171,7 @@ _build_nettle() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -1188,7 +1203,7 @@ _build_nettle() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -1237,6 +1252,7 @@ _build_gnutls() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -1268,7 +1284,7 @@ _build_gnutls() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -1304,6 +1320,7 @@ _build_rtmpdump() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -1335,7 +1352,7 @@ _build_rtmpdump() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -1387,6 +1404,7 @@ _build_openssl30quictls() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -1423,7 +1441,7 @@ _build_openssl30quictls() {
     rm -fr /usr/include/openssl
     rm -fr /usr/local/openssl-1.1.1
     rm -f /etc/ld.so.conf.d/openssl-1.1.1.conf
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -1463,6 +1481,7 @@ _build_nghttp3() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -1494,7 +1513,7 @@ _build_nghttp3() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -1508,7 +1527,7 @@ _build_ngtcp2() {
     set -e
     _tmp_dir="$(mktemp -d)"
     cd "${_tmp_dir}"
-    #git clone -b 'v0.13.1' 'https://github.com/ngtcp2/ngtcp2.git'
+    #git clone -b 'v0.15.0' 'https://github.com/ngtcp2/ngtcp2.git'
     mv -f /tmp/ngtcp2-git.tar.gz ./
     tar -xof ngtcp2-git.tar.gz
     sleep 1
@@ -1534,6 +1553,7 @@ _build_ngtcp2() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -1565,7 +1585,7 @@ _build_ngtcp2() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -1594,6 +1614,7 @@ _build_curl() {
     --disable-ldap --disable-ldaps \
     --with-nghttp3 --with-ngtcp2 \
     --prefix=/usr --libdir=/usr/lib64 --includedir=/usr/include --sysconfdir=/etc
+    sed 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' -i libtool
     make all
     rm -fr /tmp/curl
     make install DESTDIR=/tmp/curl
@@ -1608,6 +1629,7 @@ _build_curl() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -1639,7 +1661,7 @@ _build_curl() {
     echo
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
-    sleep 1
+    sleep 2
     /bin/cp -afr * /
     sleep 2
     cd /tmp
@@ -1683,6 +1705,7 @@ _build_git() {
         exit 1
     else
         rm -fr lib64
+        rm -fr lib
         chown -R root:root ./
     fi
     find usr/ -type f -iname '*.la' -delete
@@ -1717,7 +1740,7 @@ _build_git() {
     fi
     rm -f /usr/lib64/curl/private/libgmpxx.*
     rm -f /usr/lib64/curl/private/libgnutlsxx.*
-    sleep 2
+    sleep 1
     install -m 0755 -d usr/lib64/git
     cp -afr /usr/lib64/git/private usr/lib64/git/
     echo
@@ -1817,7 +1840,7 @@ _dl_ngtcp2() {
     set -e
     cd /tmp
     rm -fr /tmp/ngtcp2
-    git clone --recursive -b 'v0.13.1' 'https://github.com/ngtcp2/ngtcp2.git'
+    git clone --recursive -b 'v0.15.0' 'https://github.com/ngtcp2/ngtcp2.git'
     rm -fr ngtcp2/.git
     sleep 2
     tar -zcf ngtcp2-git.tar.gz ngtcp2
