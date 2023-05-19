@@ -629,10 +629,10 @@ _build_openssl111() {
     cd "${_tmp_dir}"
     _openssl111_ver="$(wget -qO- 'https://www.openssl.org/source/' | grep 'href="openssl-1.1.1' | sed 's|"|\n|g' | grep -i '^openssl-1.1.1.*\.tar\.gz$' | cut -d- -f2 | sed 's|\.tar.*||g' | sort -V | uniq | tail -n 1)"
     wget -c -t 9 -T 9 "https://www.openssl.org/source/openssl-${_openssl111_ver}.tar.gz"
-    tar -xof "openssl-${_openssl111_ver}.tar.gz"
+    tar -xof openssl-*.tar*
     sleep 1
-    rm -f "openssl-${_openssl111_ver}.tar.gz"
-    cd "openssl-${_openssl111_ver}"
+    rm -f openssl-*.tar*
+    cd openssl-*
     # Only for debian/ubuntu
     #sed '/define X509_CERT_FILE .*OPENSSLDIR "/s|"/cert.pem"|"/certs/ca-certificates.crt"|g' -i include/internal/cryptlib.h
     sed '/install_docs:/s| install_html_docs||g' -i Configurations/unix-Makefile.tmpl
@@ -788,7 +788,7 @@ _build_pcre2() {
     cd "${_tmp_dir}"
     _pcre2_ver="$(wget -qO- 'https://github.com/PCRE2Project/pcre2/releases' | grep -i 'pcre2-[1-9]' | sed 's|"|\n|g' | grep -i '^/PCRE2Project/pcre2/tree' | sed 's|.*/pcre2-||g' | sed 's|\.tar.*||g' | grep -ivE 'alpha|beta|rc' | sort -V | uniq | tail -n 1)"
     wget -c -t 9 -T 9 "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-${_pcre2_ver}/pcre2-${_pcre2_ver}.tar.bz2"
-    tar -xof pcre2-${_pcre2_ver}.tar.*
+    tar -xof pcre2-*.tar.*
     sleep 1
     rm -f pcre2-*.tar*
     cd pcre2-*
@@ -1740,8 +1740,8 @@ _build_git() {
     if [[ -d usr/libexec/git-core ]]; then
         find usr/libexec/git-core/ -type f -exec file '{}' \; | sed -n -e 's/^\(.*\):[  ]*ELF.*, not stripped.*/\1/p' | xargs --no-run-if-empty -I '{}' /usr/bin/strip '{}'
     fi
-    rm -f /usr/lib64/curl/private/libgmpxx.*
-    rm -f /usr/lib64/curl/private/libgnutlsxx.*
+    rm -f /usr/lib64/git/private/libgmpxx.*
+    rm -f /usr/lib64/git/private/libgnutlsxx.*
     sleep 1
     install -m 0755 -d usr/lib64/git
     cp -afr /usr/lib64/git/private usr/lib64/git/
@@ -1896,7 +1896,6 @@ _build_rtmpdump
 _build_nghttp3
 _build_ngtcp2
 _build_curl
-
 _build_git
 
 echo
