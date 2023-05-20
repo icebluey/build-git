@@ -1456,7 +1456,7 @@ _build_nghttp3() {
     set -e
     _tmp_dir="$(mktemp -d)"
     cd "${_tmp_dir}"
-    #git clone -b 'v0.11.0' 'https://github.com/ngtcp2/nghttp3.git'
+    #git clone --recursive -b 'v0.11.0' 'https://github.com/ngtcp2/nghttp3.git'
     mv -f /tmp/nghttp3-git.tar.gz ./
     tar -xof nghttp3-git.tar.gz
     sleep 1
@@ -1528,7 +1528,7 @@ _build_ngtcp2() {
     set -e
     _tmp_dir="$(mktemp -d)"
     cd "${_tmp_dir}"
-    #git clone -b 'v0.13.1' 'https://github.com/ngtcp2/ngtcp2.git'
+    #git clone --recursive -b 'v0.15.0' 'https://github.com/ngtcp2/ngtcp2.git'
     mv -f /tmp/ngtcp2-git.tar.gz ./
     tar -xof ngtcp2-git.tar.gz
     sleep 1
@@ -1843,7 +1843,7 @@ _dl_ngtcp2() {
     set -e
     cd /tmp
     rm -fr /tmp/ngtcp2
-    git clone --recursive -b 'v0.13.1' 'https://github.com/ngtcp2/ngtcp2.git'
+    git clone --recursive -b 'v0.15.0' 'https://github.com/ngtcp2/ngtcp2.git'
     rm -fr ngtcp2/.git
     sleep 2
     tar -zcf ngtcp2-git.tar.gz ngtcp2
