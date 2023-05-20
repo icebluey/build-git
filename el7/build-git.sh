@@ -81,10 +81,10 @@ _build_zlib() {
         find usr/bin/ -type f -exec file '{}' \; | sed -n -e 's/^\(.*\):[  ]*ELF.*, not stripped.*/\1/p' | xargs --no-run-if-empty -I '{}' /usr/bin/strip '{}'
     fi
     echo
-    /bin/rm -f /usr/lib64/libz.so*
-    /bin/rm -f /usr/lib64/libz.a
     install -m 0755 -d usr/lib64/git/private
     cp -af usr/lib64/*.so* usr/lib64/git/private/
+    /bin/rm -f /usr/lib64/libz.so*
+    /bin/rm -f /usr/lib64/libz.a
     sleep 2
     /bin/cp -afr * /
     sleep 2
