@@ -170,7 +170,8 @@ _build_cares() {
     set -e
     _tmp_dir="$(mktemp -d)"
     cd "${_tmp_dir}"
-    wget -c -t 9 -T 9 "https://c-ares.org/download/c-ares-1.19.0.tar.gz"
+    _cares_ver="$(wget -qO- 'https://c-ares.org/' | grep -i 'href="/download/c-ares-[1-9].*\.tar' | sed -e 's|"|\n|g' | grep -i '^/download.*tar.gz$' | sed -e 's|.*c-ares-||g' -e 's|\.tar.*||g')"
+    wget -c -t 9 -T 9 "https://c-ares.org/download/c-ares-${_cares_ver}.tar.gz"
     tar -xof c-ares-*.tar*
     sleep 1
     rm -f c-ares-*.tar*
@@ -541,7 +542,8 @@ _build_libexpat() {
     set -e
     _tmp_dir="$(mktemp -d)"
     cd "${_tmp_dir}"
-    wget -c -t 9 -T 9 "https://github.com/libexpat/libexpat/releases/download/R_2_5_0/expat-2.5.0.tar.bz2"
+    _expat_ver="$(wget -qO- 'https://github.com/libexpat/libexpat/releases' | grep -i '/libexpat/libexpat/tree/' | sed 's|"|\n|g' | grep -i '^/libexpat/libexpat/tree/' | sed 's|.*R_||g' | sed 's|_|.|g' | sort -V | tail -n 1)"
+    wget -c -t 9 -T 9 "https://github.com/libexpat/libexpat/releases/download/R_${_expat_ver//./_}/expat-${_expat_ver}.tar.bz2"
     tar -xof expat-*.tar*
     sleep 1
     rm -f expat-*.tar*
@@ -701,7 +703,8 @@ _build_libssh2() {
     set -e
     _tmp_dir="$(mktemp -d)"
     cd "${_tmp_dir}"
-    wget -c -t 9 -T 9 "https://www.libssh2.org/download/libssh2-1.10.0.tar.gz"
+    _libssh2_ver="$(wget -qO- 'https://www.libssh2.org/' | grep -i 'href="download/libssh2-[1-9]' | sed 's|"|\n|g' | grep -i '^download/libssh2-[1-9]' | sed -e 's|.*libssh2-||g' -e 's|\.tar.*||g' | grep -ivE 'alpha|beta|rc[0-9]' | sort -V | tail -n 1)"
+    wget -c -t 9 -T 9 "https://www.libssh2.org/download/libssh2-${_libssh2_ver}.tar.gz"
     tar -xof libssh2-*.tar*
     sleep 1
     rm -f libssh2-*.tar*
@@ -985,7 +988,8 @@ _build_libffi() {
     set -e
     _tmp_dir="$(mktemp -d)"
     cd "${_tmp_dir}"
-    wget -c -t 9 -T 9 "https://github.com/libffi/libffi/releases/download/v3.4.4/libffi-3.4.4.tar.gz"
+    _libffi_ver="$(wget -qO- 'https://github.com/libffi/libffi/releases' | grep -i '/libffi/libffi/tree/' | sed 's|"|\n|g' | grep -i '^/libffi/libffi/tree/' | grep -ivE 'alpha|beta|rc[0-9]' | sed 's|.*/tree/v||g' | sort -V | tail -n 1)"
+    wget -c -t 9 -T 9 "https://github.com/libffi/libffi/releases/download/v${_libffi_ver}/libffi-${_libffi_ver}.tar.gz"
     tar -xof libffi-*.tar*
     sleep 1
     rm -f libffi-*.tar*
