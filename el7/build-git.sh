@@ -719,7 +719,7 @@ _build_libssh2() {
     set -e
     _tmp_dir="$(mktemp -d)"
     cd "${_tmp_dir}"
-    _libssh2_ver="$(wget -qO- 'https://www.libssh2.org/' | grep -i 'href="download/libssh2-[1-9]' | sed 's|"|\n|g' | grep -i '^download/libssh2-[1-9]' | sed -e 's|.*libssh2-||g' -e 's|\.tar.*||g' | grep -ivE 'alpha|beta|rc[0-9]' | sort -V | tail -n 1)"
+    _libssh2_ver="$(wget -qO- 'https://www.libssh2.org/' | grep 'libssh2-[1-9].*\.tar\.' | sed 's|"|\n|g' | grep -i '^download/libssh2-[1-9]' | sed -e 's|.*libssh2-||g' -e 's|\.tar.*||g' | grep -ivE 'alpha|beta|rc[0-9]' | sort -V | tail -n 1)"
     wget -c -t 9 -T 9 "https://www.libssh2.org/download/libssh2-${_libssh2_ver}.tar.gz"
     tar -xof libssh2-*.tar*
     sleep 1
