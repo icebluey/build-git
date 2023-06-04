@@ -709,6 +709,42 @@ _build_libssh2() {
     sleep 1
     rm -f libssh2-*.tar*
     cd libssh2-*
+
+    if [[ "${_libssh2_ver}" == '1.11.0' ]]; then
+        echo 'diff --git a/configure.ac b/configure.ac
+        index a4d386b..6b79684 100644
+        --- a/configure.ac
+        +++ b/configure.ac
+        @@ -387,6 +387,8 @@ elif test "$found_crypto" = "mbedtls"; then
+           LIBS="${LIBS} ${LTLIBMBEDCRYPTO}"
+         fi
+ 
+        +LIBS="${LIBS} ${LTLIBZ}"
+        +
+         AC_CONFIG_FILES([Makefile
+                          src/Makefile
+                          tests/Makefile
+        diff --git a/src/Makefile.am b/src/Makefile.am
+        index 91222d5..380674b 100644
+        --- a/src/Makefile.am
+        +++ b/src/Makefile.am
+        @@ -48,8 +48,7 @@ VERSION=-version-info 1:1:0
+         #
+ 
+         libssh2_la_LDFLAGS = $(VERSION) -no-undefined \
+        -  -export-symbols-regex '\''^libssh2_.*'\'' \
+        -  $(LTLIBZ)
+        +  -export-symbols-regex '\''^libssh2_.*'\''
+ 
+         if HAVE_WINDRES
+         .rc.lo:' > ../fix-build-with-openssl111.patch
+        sed 's|^        ||g' -i ../fix-build-with-openssl111.patch
+        patch -N -p1 -i ../fix-build-with-openssl111.patch
+        autoreconf -ifv
+        rm -fr autom4te.cache
+        rm -f configure.ac.orig src/Makefile.am.orig
+    fi
+
     LDFLAGS='' ; LDFLAGS="${_ORIG_LDFLAGS}"' -Wl,-rpath,\$$ORIGIN' ; export LDFLAGS
     ./configure \
     --build=x86_64-linux-gnu --host=x86_64-linux-gnu \
