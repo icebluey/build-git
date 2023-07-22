@@ -247,16 +247,37 @@ _build_brotli() {
 
     cd brotli
     rm -fr .git
-    ./bootstrap
-    rm -fr autom4te.cache
-    LDFLAGS='' ; LDFLAGS="${_ORIG_LDFLAGS}"' -Wl,-rpath,\$$ORIGIN' ; export LDFLAGS
-    ./configure \
-    --build=x86_64-linux-gnu --host=x86_64-linux-gnu \
-    --enable-shared --enable-static \
-    --prefix=/usr --libdir=/usr/lib/x86_64-linux-gnu --includedir=/usr/include --sysconfdir=/etc
-    make all
-    rm -fr /tmp/brotli
-    make install DESTDIR=/tmp/brotli
+    if [[ -f bootstrap ]]; then
+        bash bootstrap
+        rm -fr autom4te.cache
+        LDFLAGS='' ; LDFLAGS="${_ORIG_LDFLAGS}"' -Wl,-rpath,\$$ORIGIN' ; export LDFLAGS
+        ./configure \
+        --build=x86_64-linux-gnu --host=x86_64-linux-gnu \
+        --enable-shared --disable-static \
+        --prefix=/usr --libdir=/usr/lib64 --includedir=/usr/include --sysconfdir=/etc
+        make all
+        rm -fr /tmp/brotli
+        make install DESTDIR=/tmp/brotli
+    else
+        rm -fr build
+        LDFLAGS='' ; LDFLAGS="${_ORIG_LDFLAGS}"' -Wl,-rpath,\$ORIGIN' ; export LDFLAGS
+        cmake \
+        -S "." \
+        -B "build" \
+        -DCMAKE_BUILD_TYPE='Release' \
+        -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
+        -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+        -DINCLUDE_INSTALL_DIR:PATH=/usr/include \
+        -DLIB_INSTALL_DIR:PATH=/usr/lib64 \
+        -DSYSCONF_INSTALL_DIR:PATH=/etc \
+        -DSHARE_INSTALL_PREFIX:PATH=/usr/share \
+        -DLIB_SUFFIX=64 \
+        -DBUILD_SHARED_LIBS:BOOL=ON \
+        -DCMAKE_INSTALL_SO_NO_EXE:INTERNAL=0
+        cmake --build "build"  --verbose
+        rm -fr /tmp/brotli
+        DESTDIR="/tmp/brotli" cmake --install "build"
+    fi
     cd /tmp/brotli
     if [[ "$(pwd)" = '/' ]]; then
         echo
@@ -794,6 +815,7 @@ _build_libssh2() {
         find usr/bin/ -type f -exec file '{}' \; | sed -n -e 's/^\(.*\):[  ]*ELF.*, not stripped.*/\1/p' | xargs --no-run-if-empty -I '{}' /usr/bin/strip '{}'
     fi
     echo
+    sed -e '/^Libs/s/-R[^ ]*//g' -e '/^Libs/s/ *$//' -i usr/lib/x86_64-linux-gnu/pkgconfig/*.pc
     install -m 0755 -d usr/lib/x86_64-linux-gnu/git/private
     cp -af usr/lib/x86_64-linux-gnu/*.so* usr/lib/x86_64-linux-gnu/git/private/
     sleep 2
@@ -1008,6 +1030,7 @@ _build_libidn2() {
         find usr/bin/ -type f -exec file '{}' \; | sed -n -e 's/^\(.*\):[  ]*ELF.*, not stripped.*/\1/p' | xargs --no-run-if-empty -I '{}' /usr/bin/strip '{}'
     fi
     echo
+    sed -e '/^Libs/s/-R[^ ]*//g' -e '/^Libs/s/ *$//' -i usr/lib/x86_64-linux-gnu/pkgconfig/*.pc
     install -m 0755 -d usr/lib/x86_64-linux-gnu/git/private
     cp -af usr/lib/x86_64-linux-gnu/*.so* usr/lib/x86_64-linux-gnu/git/private/
     sleep 2
@@ -1699,6 +1722,7 @@ _build_curl() {
         find usr/bin/ -type f -exec file '{}' \; | sed -n -e 's/^\(.*\):[  ]*ELF.*, not stripped.*/\1/p' | xargs --no-run-if-empty -I '{}' /usr/bin/strip '{}'
     fi
     echo
+    sed -e '/^Libs/s/-R[^ ]*//g' -e '/^Libs/s/ *$//' -i usr/lib/x86_64-linux-gnu/pkgconfig/*.pc
     install -m 0755 -d usr/lib/x86_64-linux-gnu/git/private
     cp -af usr/lib/x86_64-linux-gnu/*.so* usr/lib/x86_64-linux-gnu/git/private/
     sleep 2
@@ -1870,7 +1894,7 @@ _dl_nghttp3() {
     set -e
     cd /tmp
     rm -fr /tmp/nghttp3
-    git clone --recursive -b 'v0.11.0' 'https://github.com/ngtcp2/nghttp3.git'
+    git clone --recursive -b 'v0.13.0' 'https://github.com/ngtcp2/nghttp3.git'
     rm -fr nghttp3/.git
     sleep 2
     tar -zcf nghttp3-git.tar.gz nghttp3
@@ -1883,7 +1907,7 @@ _dl_ngtcp2() {
     set -e
     cd /tmp
     rm -fr /tmp/ngtcp2
-    git clone --recursive -b 'v0.15.0' 'https://github.com/ngtcp2/ngtcp2.git'
+    git clone --recursive -b 'v0.17.0' 'https://github.com/ngtcp2/ngtcp2.git'
     rm -fr ngtcp2/.git
     sleep 2
     tar -zcf ngtcp2-git.tar.gz ngtcp2
